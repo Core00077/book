@@ -1,0 +1,31 @@
+server:
+  port: 80
+  address: 0.0.0.0
+  servlet:
+    session:
+      timeout: 7D
+      cookie:
+        max-age: 7D
+
+spring:
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    password: eb6ef96dbd168096345d3a85b56ca4b587bac338906fe89f2738137fae18ae56
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+    timeout: 0ms
+
+wx:
+  appid: wx986751f431a73d27
+  secret: 34f141fdfa1be4b840f612d13a60649f
+  login-url: https://api.weixin.qq.com/sns/jscode2session
+
+douban:
+  book-url: https://api.douban.com/v2/book/isbn/
+  user-url: https://api.douban.com/v2/user/
+  collection-url: https://api.douban.com/v2/book/user/
