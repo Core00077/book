@@ -16,11 +16,13 @@ import java.util.Map;
 @Service
 public class CollectionService {
     private final UserService userService;
+    private final BookService bookService;
     private final DoubanConfig doubanConfig;
 
     @Autowired
-    public CollectionService(UserService userService, DoubanConfig doubanConfig) {
+    public CollectionService(UserService userService, BookService bookService, DoubanConfig doubanConfig) {
         this.userService = userService;
+        this.bookService = bookService;
         this.doubanConfig = doubanConfig;
     }
 
@@ -57,7 +59,7 @@ public class CollectionService {
         if (user.getCollections().containsKey(collectionOldName)) {
             Collection collection = user.getCollections().get(collectionOldName);
             collection.setName(collectionName);
-            for(String book:collection.getBooks().keySet()){
+            for (String book : collection.getBooks().keySet()) {
                 collection.getBooks().get(book).setFromCollection(collectionName);
             }
             user.getCollections().remove(collectionOldName);
@@ -74,12 +76,9 @@ public class CollectionService {
 
     public Status.StatusCode postBook(String username, String collectionName, String isbn) {
         User user = userService.findUserById(username);
+        Book book = bookService.getBook(isbn);
 
-        Book book = new Book();
-        book.setIsbn(isbn);
-        book.setDoubanInfo(RequestSender.SendGet(doubanConfig.getBookUrl() + isbn, Map.class));
         book.setFromCollection(user.getCollections().get(collectionName).getName());
-
         if (user.getCollections().containsKey(collectionName)) {
             if (user.getCollections().get(collectionName).getBooks().containsKey(isbn)) {
                 return Status.StatusCode.bookAlreadyExist;

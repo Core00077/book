@@ -1,16 +1,21 @@
 package com.corechan.book.entity;
 
-import java.util.ArrayList;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.HashMap;
 
+@Document(collection = "User")
 public class User {
+    @Id
     private String userId;
-    private String name="default_value";
+    private String name = "default_value";
     private String password;
     private String doubanId;
     private String avatar;
     private String desc;
-    private HashMap<String,Collection> collections=new HashMap<>();
+    private HashMap<String, Collection> collections = new HashMap<>();
 
     public User() {
     }

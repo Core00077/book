@@ -19,6 +19,9 @@ spring:
         max-idle: 8
         min-idle: 0
     timeout: 0ms
+  data:
+    mongodb:
+      uri: mongodb://book:book@localhost:27017/book
 
 wx:
   appid: wx986751f431a73d27

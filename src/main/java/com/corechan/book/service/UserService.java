@@ -31,7 +31,7 @@ public class UserService {
         newUser.setName(user.getName());
         newUser.setPassword(BCryptUtil.encode(user.getPassword()));
 //        newUser.setDoubanId(user.getDoubanId());
-        if (userDao.findById(newUser.getUserId()) != null) {
+        if (userDao.findByUserId(newUser.getUserId()).isPresent()) {
             return Status.StatusCode.idAlreadyExist;
         } else {
             userDao.save(newUser);
@@ -40,8 +40,8 @@ public class UserService {
     }
 
     public Status.StatusCode login(String userId, String password) {
-        if (userDao.findById(userId) != null) {
-            if (BCryptUtil.match(password, userDao.findById(userId).getPassword())) {
+        if (userDao.findByUserId(userId).isPresent()) {
+            if (BCryptUtil.match(password, userDao.findByUserId(userId).get().getPassword())) {
                 return Status.StatusCode.success;
             } else {
                 return Status.StatusCode.wrongPassword;
@@ -52,7 +52,7 @@ public class UserService {
     }
 
     public Status.StatusCode wxLogin(String userId) {
-        if (userDao.findById(userId) != null) {
+        if (userDao.findByUserId(userId).isPresent()) {
             return Status.StatusCode.success;
         } else {
             User newUser = new User();
@@ -76,7 +76,11 @@ public class UserService {
     }
 
     public User findUserById(String userId) {
-        return userDao.findById(userId);
+        if (userDao.findByUserId(userId).isPresent())
+            return userDao.findByUserId(userId).get();
+        else {
+            return null;
+        }
     }
 
     public Status.StatusCode update(User user) {

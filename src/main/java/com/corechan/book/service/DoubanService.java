@@ -19,23 +19,18 @@ import java.util.Map;
 @Service
 public class DoubanService {
     private final UserService userService;
+    private final BookService bookService;
     private final DoubanConfig doubanConfig;
 
     @Autowired
-    public DoubanService(UserService userService, DoubanConfig doubanConfig) {
+    public DoubanService(UserService userService, BookService bookService, DoubanConfig doubanConfig) {
         this.userService = userService;
+        this.bookService = bookService;
         this.doubanConfig = doubanConfig;
     }
 
     public Status.StatusCode importBooks(String doubanId, String username) {
-        User user = userService.findUserById(username);
-        user.setDoubanId(doubanId);
-
-        //新建豆瓣收藏夹
-        Collection collection = new Collection();
-        collection.setName("豆瓣用户" + doubanId);
-
-        //获取书籍加入收藏夹
+        //获取书籍
         HashMap map = null;
         try {
             map = (HashMap) RequestSender.SendGet(doubanConfig.getCollectionUrl() + doubanId + "/collections?" + "count=100&start=0", Map.class);
@@ -44,15 +39,18 @@ public class DoubanService {
                 throw new DoubanIdException();
             }
         }
+        //新建豆瓣收藏夹
+        Collection collection = new Collection();
+        collection.setName("豆瓣用户" + doubanId);
         ArrayList content = (ArrayList) map.get("collections");
         for (int i = 0; i < content.size(); i++) {
-            Book book = new Book();
-            book.setDoubanInfo((Map<String, Object>) ((HashMap) content.get(i)).get("book"));
-            book.setIsbn(book.getDoubanInfo().get("isbn13").toString());
+            String isbn = (String) ((Map) ((HashMap) content.get(i)).get("book")).get("isbn13");
+            Book book = bookService.getBook(isbn);
             book.setFromCollection(collection.getName());
-
             collection.getBooks().put(book.getIsbn(), book);
         }
+        User user = userService.findUserById(username);
+        user.setDoubanId(doubanId);
         user.getCollections().put(collection.getName(), collection);
         return userService.update(user);
     }
