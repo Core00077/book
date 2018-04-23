@@ -6,6 +6,7 @@ server:
       timeout: 7D
       cookie:
         max-age: 7D
+        http-only: true
 
 spring:
   redis:
