@@ -17,13 +17,11 @@ import java.util.Map;
 public class CollectionService {
     private final UserService userService;
     private final BookService bookService;
-    private final DoubanConfig doubanConfig;
 
     @Autowired
-    public CollectionService(UserService userService, BookService bookService, DoubanConfig doubanConfig) {
+    public CollectionService(UserService userService, BookService bookService) {
         this.userService = userService;
         this.bookService = bookService;
-        this.doubanConfig = doubanConfig;
     }
 
     public HashMap<String, Collection> getCollections(String username) {
