@@ -27,3 +27,5 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+
+结果.xlsx

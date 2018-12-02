@@ -22,7 +22,11 @@ spring:
     timeout: 0ms
   data:
     mongodb:
-      uri: mongodb://book:book@localhost:27017/book
+      uri: mongodb://localhost:27017/book
+  resources:
+    cache:
+      cachecontrol:
+        max-age: 7D
 
 wx:
   appid: wx7c00b0b2f9f128fe
